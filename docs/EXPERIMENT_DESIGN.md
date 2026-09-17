@@ -1,718 +1,455 @@
-# Campaign Experiment Design
+# Experiment Design
 
-## 1. Business Context & Experiment Objective
+## 1. Business Context
 
-### Business Context
+The OTA's marketing team is running Google Ads campaigns to generate hotel bookings.
 
-The OTA marketing team uses paid search to acquire users who may eventually make hotel bookings.
+The current campaign strategy promotes the **top 100 hotels across the OTA's inventory**. The marketing team wants to test whether a more curated inventory strategy can improve campaign performance by focusing advertising on hotels in the OTA's three key destinations:
 
-Campaign performance is usually monitored through impressions, clicks, conversion rate, CAC, and ROAS. These metrics are useful for reporting, but they are descriptive. A campaign with a higher conversion rate is not necessarily causing more bookings, since results can also be affected by audience mix, timing, auction conditions, and other factors.
+* Jakarta
+* Bali
+* Bandung
 
-The marketing team therefore wants to test whether changing the campaign message affects downstream booking behavior.
-
-### Experiment Objective
-
-Test whether a new paid-search campaign message changes the rate at which eligible users make a confirmed hotel booking.
-
-The intervention is limited to the campaign message. The main campaign conditions should remain consistent across variants, including:
-
-* Target audience
-* Destination
-* Offer
-* Landing experience
-* Experiment period
-
-### Experiment Question
-
-> Does the treatment campaign message produce a different confirmed booking conversion rate than the existing campaign message among eligible users?
-
-### Why an Experiment
-
-Historical campaign data can show relationships between campaign characteristics and outcomes, but it cannot by itself establish causality.
-
-A controlled experiment provides a defined comparison between two campaign conditions and allows the analysis to estimate the difference in booking outcomes under the experiment design.
+The goal is to determine whether restricting the promoted inventory to these destinations improves the campaign's ability to generate paid hotel transactions.
 
 ---
 
-## 2. Experiment Design
+## 2. Business Question
 
-### Experiment Overview
+> **Which campaign strategy is more effective at generating paid hotel bookings: promoting the top 100 hotels across the entire inventory, or promoting hotels concentrated in the top three destinations?**
 
-The experiment compares the existing paid-search message with a new message for the same hotel campaign.
+The experiment focuses specifically on the effect of **hotel inventory selection** within the paid search campaign.
 
-| Variant       | Campaign Message                                | Description               |
-| ------------- | ----------------------------------------------- | ------------------------- |
-| Control (A)   | “Bali Hotels — Up to 30% Off”                   | Existing campaign message |
-| Treatment (B) | “Plan Your Bali Getaway — Hotels Up to 30% Off” | New campaign message      |
+---
 
-The treatment changes the messaging and positioning while keeping the destination and core offer consistent.
+## 3. Experiment Objective
 
-### Experimental Population
+The objective is to measure whether changing the eligible hotel inventory from the broader top-100 selection to a curated selection of hotels in Jakarta, Bali, and Bandung changes campaign conversion performance.
 
-The population consists of users eligible for the paid-search campaign during the experiment period.
+The experiment should determine:
 
-Eligibility is defined before assignment. Post-assignment actions such as clicks, OTA visits, or booking activity should not determine whether a user belongs to the experiment population.
+1. Whether the curated inventory generates a different click-to-paid-transaction conversion rate.
+2. Whether the change improves campaign efficiency.
+3. Whether any improvement comes with negative trade-offs such as lower traffic volume or higher cancellation rates.
 
-### Experimental Unit
+---
 
-The primary unit of analysis is the **eligible user**.
+## 4. Hypotheses
 
-Each eligible user is assigned to one experimental condition according to the experiment's allocation mechanism.
+### Primary Hypothesis
 
-### Assignment
+**Treatment:** Promoting hotels concentrated in Jakarta, Bali, and Bandung will produce a higher click-to-paid-transaction conversion rate than the current top-100 inventory strategy.
 
-Target allocation is 50% Control and 50% Treatment.
+### Counter-Hypothesis
 
-Assignment should happen before post-assignment outcomes are observed and should not depend on expected booking behavior.
+Restricting inventory to three destinations may reduce the addressable opportunity for the campaign. The curated strategy could therefore produce a lower conversion rate or weaker overall campaign efficiency despite being more focused.
 
-The primary analysis uses an **Intention-to-Treat (ITT)** framework. Users remain in their assigned group regardless of whether they later receive an impression, click, reach the OTA, or can be linked to a booking.
+The experiment is designed to test the difference rather than assume that either strategy will perform better.
 
-### Hypotheses
+---
 
-**Null hypothesis (H0)**
+## 5. Experiment Design
 
-The confirmed booking conversion rate is the same for Control and Treatment.
+A controlled campaign experiment will compare two campaign variants.
 
-**Alternative hypothesis (H1)**
+| Variant   | Strategy         | Description                                                 |
+| --------- | ---------------- | ----------------------------------------------------------- |
+| Control   | Current campaign | Promotes the top 100 hotels across the entire OTA inventory |
+| Treatment | Curated campaign | Promotes hotels restricted to Jakarta, Bali, and Bandung    |
 
-The confirmed booking conversion rate differs between Control and Treatment.
+The primary experimental intervention is:
 
-The test is two-sided because the treatment could increase or decrease conversion.
+> **Hotel inventory eligibility**
+
+Hotels in the three target destinations may also appear in the overall top 100. This overlap is intentional and does not invalidate the experiment because the treatment difference is the **inventory eligibility rule**, not a requirement for completely unique hotels.
+
+---
+
+## 6. Experimental Intervention
+
+The Treatment campaign changes only the hotel inventory available for promotion.
+
+### Control
+
+Promote the existing top 100 hotel inventory across the OTA.
+
+### Treatment
+
+Promote hotels located in:
+
+* Jakarta
+* Bali
+* Bandung
+
+Where possible, the following campaign settings should remain consistent between variants:
+
+* Campaign objective
+* Targeting
+* Keyword/search strategy
+* Bidding strategy
+* Budget framework
+* Ad messaging
+* Landing experience
+* Conversion tracking
+* Experiment duration
+
+The purpose is to isolate the effect of inventory selection as much as practical.
+
+---
+
+## 7. Experiment Population
+
+The experiment population consists of **eligible paid-search campaign clicks** generated by the Control and Treatment variants during the 28-day experiment period.
+
+The primary analysis does not use all OTA users or all website visitors.
+
+It focuses on users who interacted with one of the experimental campaign variants through an eligible campaign click.
+
+---
+
+## 8. Unit of Analysis
+
+The primary unit of analysis is the **campaign click**.
+
+Each eligible click is treated as having a binary outcome:
+
+* `1` = the click generated at least one paid transaction within the conversion window.
+* `0` = the click did not generate a paid transaction within the conversion window.
+
+Using clicks as the unit of analysis allows the primary metric to be evaluated as a conversion proportion between Control and Treatment.
+
+---
+
+## 9. Conversion Definition
+
+A **paid transaction** represents a successfully paid hotel booking recorded by the OTA's transaction system and configured as the campaign's primary conversion event.
+
+For the experiment, a click is considered a **converting click** when it generates at least one valid paid transaction within:
+
+> **7 days after the eligible campaign click**
+
+Therefore:
+
+**Click-to-Paid-Transaction Conversion Rate**
+
+= Converting Clicks / Eligible Clicks
+
+A click that generates multiple paid transactions is still counted as **one converting click** for the primary metric.
+
+This prevents multiple transactions from causing a single click to be treated as multiple independent conversion observations.
+
+---
+
+## 10. Metrics
 
 ### Primary Metric
 
-**Confirmed booking conversion rate**
+#### Click-to-Paid-Transaction Conversion Rate
 
-```text
-Confirmed Booking Conversion Rate
-=
-Users with at least one confirmed booking
-/
-Eligible users assigned to the experiment
-```
+**Formula:**
 
-The metric is user-based. A user with multiple bookings is still counted once for the primary conversion metric.
+`Converting Clicks / Eligible Clicks`
+
+Where:
+
+* **Eligible Clicks** = campaign clicks that meet the experiment's inclusion criteria.
+* **Converting Clicks** = eligible clicks that generate at least one valid paid transaction within 7 days.
+
+The primary comparison will evaluate the conversion rate between Control and Treatment.
+
+---
 
 ### Secondary Metrics
 
-The following metrics will help explain the campaign and booking funnel:
+#### Paid Transactions per Click
 
-* Impression rate
+`Paid Transactions / Eligible Clicks`
+
+Measures the number of paid transactions generated relative to campaign traffic.
+
+Unlike the primary metric, a single click may contribute more than one transaction.
+
+---
+
+#### Cost per Transaction
+
+`Campaign Cost / Paid Transactions`
+
+Measures the advertising cost required to generate each paid transaction.
+
+---
+
+#### Booking Value per Click
+
+`Total Booking Value / Eligible Clicks`
+
+Measures the booking value generated relative to campaign traffic.
+
+---
+
+#### Average Booking Value
+
+`Total Booking Value / Paid Transactions`
+
+Measures the average value of transactions generated by each campaign variant.
+
+---
+
+### Guardrail Metric
+
+#### Cancellation Rate
+
+`Cancelled Transactions / Total Transactions`
+
+Used to identify whether one campaign variant generates more transactions but also produces a higher proportion of cancelled bookings.
+
+This prevents the experiment from interpreting additional bookings as purely positive without considering transaction quality.
+
+---
+
+### Diagnostic Metrics
+
+The following metrics provide context for interpreting the experiment:
+
+* Impressions
+* Clicks
 * Click-through rate (CTR)
-* OTA session rate
-* Hotel-view rate
-* Booking initiation rate
-* Booking completion rate
-* Confirmed booking rate
-* Average booking value
-* CAC
-* ROAS
+* Campaign cost
+* Paid transactions
+* Booking value
 
-These are secondary measures and should not replace the primary experiment metric.
-
-### Guardrails
-
-The experiment will also monitor:
-
-* Cancellation rate
-* Confirmed booking value
-* Average booking value
-* Customer quality indicators
-
-These help identify cases where a change in conversion is accompanied by changes in booking value or customer quality.
+These metrics are not the primary statistical test but help explain differences between variants.
 
 ---
 
-## 3. Measurement Architecture
+## 11. Experiment Setup
 
-### 3.1 Measurement Objective
+### Experiment Duration
 
-The main measurement challenge is connecting the experiment condition in Google Ads to downstream OTA behavior and bookings.
+The campaign experiment will run for:
 
-The expected path is:
+> **28 days**
 
-```text
-Google Ads Experiment
-        ↓
-Experiment Arm
-        ↓
-Campaign / Ad / Click
-        ↓
-Click Identifier
-        ↓
-OTA Session
-        ↓
-Customer
-        ↓
-Booking
-```
+Both Control and Treatment should be active during the same experiment period.
 
-The project does not assume that every user can be traced through the full chain. Linkage gaps will be measured during validation.
+### Traffic Allocation
 
-### 3.2 Google Ads Experiment
+The experiment is designed around an approximately **50/50 allocation** between Control and Treatment, subject to the campaign platform's actual delivery.
 
-The experiment is assumed to use Google Ads experiment functionality, with one arm representing the existing campaign configuration and the other containing the new campaign message.
+The analysis should validate the observed traffic distribution rather than assume that allocation was perfectly balanced.
 
-The target traffic split is 50/50. Actual delivery may differ because of auction dynamics, bidding, ad quality, budget constraints, and other campaign factors.
+### Conversion Window
 
-For Search experiments, the split method can be cookie-based or search-based:
+The conversion window is:
 
-* **Cookie-based:** a user is assigned to one version and is designed to remain in that version.
-* **Search-based:** assignment is randomized at the search level, so the same user may encounter both versions across searches.
+> **7 days after an eligible campaign click**
 
-The split method needs to be recorded because it affects how exposure and contamination are interpreted.
+The conversion window is fixed before analysis and should not be changed based on the observed results.
 
-### 3.3 Google Ads Experiment Data
+### Observation Period
 
-The experiment metadata should capture:
+Because conversions can occur up to 7 days after the final experiment clicks, the experiment requires an additional:
 
-```text
-experiment_id
-experiment_name
-experiment_arm
-campaign_id
-experiment_start_datetime
-experiment_end_datetime
-traffic_split
-split_method
-```
+> **7-day post-experiment observation period**
 
-Google Ads experiment reporting provides aggregate performance by experiment arm, but it is not treated here as a customer-level assignment table.
+This period does not represent additional experiment exposure.
 
-A separate measurement path is therefore needed to connect advertising activity to OTA users and bookings.
+It exists only to allow clicks generated during the final days of the experiment to complete their 7-day conversion windows.
 
-### 3.4 Click-Level Measurement
+### Total Measurement Timeline
 
-Where available, a click identifier such as a GCLID can connect an advertising click to first-party tracking.
-
-The click-level data should contain:
-
-```text
-gclid
-campaign_id
-ad_id
-ad_group_id
-click_timestamp
-cost
-```
-
-The GCLID is a **linkage key**, not the experiment assignment itself.
-
-Experiment assignment remains a separate concept derived from the experiment configuration and campaign/ad mapping.
-
-### 3.5 OTA Tracking
-
-When a user reaches the OTA, first-party tracking should retain the advertising identifier and associate it with the user's session.
-
-```text
-session_id
-gclid
-event_timestamp
-event_type
-```
-
-Example events:
-
-```text
-landing
-search
-hotel_view
-booking_start
-booking_complete
-```
-
-The linkage is:
-
-```text
-Google Ads Click
-       ↓
-     GCLID
-       ↓
-  OTA Session
-```
-
-### 3.6 Customer Identity Resolution
-
-A session may later be associated with a customer through login, account activity, booking activity, or another first-party identity mechanism.
-
-```text
-session_id
-customer_id
-identity_timestamp
-```
-
-The resulting path is:
-
-```text
-GCLID
-  ↓
-Session
-  ↓
-Customer
-```
-
-Identity resolution will not be assumed to be complete. Some sessions may remain anonymous or fail to resolve to a customer.
-
-### 3.7 Booking Data
-
-The booking system provides the downstream business outcome.
-
-```text
-booking_id
-customer_id
-booking_timestamp
-booking_value
-booking_status
-cancellation_status
-```
-
-The full measurement path is:
-
-```text
-Experiment Arm
-      ↓
-Campaign / Ad
-      ↓
-GCLID
-      ↓
-Session
-      ↓
-Customer
-      ↓
-Booking
-```
-
-The primary analysis requires a defensible connection between experimental assignment and the customer's outcome.
-
-### 3.8 Experiment Assignment vs Marketing Attribution
-
-These are two different concepts:
-
-**Experiment assignment**
-
-> Which experimental condition was the user assigned to?
-
-**Marketing attribution**
-
-> Which marketing touchpoint receives credit for the booking?
-
-```text
-Experiment Assignment ≠ Marketing Attribution
-```
-
-The Control vs Treatment comparison should therefore be based on experimental assignment, not on whichever campaign receives attribution credit for a booking.
-
-### 3.9 Expected Measurement Gaps
-
-The synthetic data will include realistic gaps such as:
-
-* Missing click identifiers
-* Missing session identifiers
-* Sessions that cannot be linked to a customer
-* Multiple clicks from the same customer
-* Multiple sessions from the same customer
-* Multiple bookings from the same customer
-* Delayed identity resolution
-* Delayed conversions
-* Cancelled bookings
-* Cross-device activity that cannot be reliably linked
-* Advertising activity that cannot be connected to first-party data
-* Potential cross-variant exposure
-
-These gaps will be measured rather than silently removed.
+| Period                      | Duration | Purpose                                         |
+| --------------------------- | -------: | ----------------------------------------------- |
+| Experiment exposure         |  28 days | Control and Treatment receive campaign traffic  |
+| Post-experiment observation |   7 days | Capture remaining conversions from final clicks |
+| Total measurement period    |  35 days | Complete experiment measurement                 |
 
 ---
 
-## 4. Data Requirements & Analytical Data Model
+## 12. Data Requirements
 
-### 4.1 Data Sources
+The experiment requires campaign-level performance data and transaction-level data.
 
-The experiment requires five logical data sources:
+### Campaign Experiment Data
 
-| Source                | Purpose                                       |
-| --------------------- | --------------------------------------------- |
-| Google Ads Experiment | Defines experiment arms and configuration     |
-| Google Ads Clicks     | Captures advertising activity and cost        |
-| OTA Tracking          | Connects clicks to sessions and funnel events |
-| Customer Identity     | Connects sessions to customers                |
-| Booking System        | Provides booking and economic outcomes        |
+A Google Ads experiment performance export should contain fields such as:
 
-The sources are connected through available identifiers rather than assuming a single user ID exists across all systems.
+| Field               | Description                    |
+| ------------------- | ------------------------------ |
+| `experiment_id`     | Experiment identifier          |
+| `date`              | Campaign performance date      |
+| `variant`           | Control or Treatment           |
+| `campaign_id`       | Campaign identifier            |
+| `impressions`       | Number of impressions          |
+| `clicks`            | Number of eligible clicks      |
+| `cost`              | Advertising cost               |
+| `paid_transactions` | Recorded paid conversion count |
 
-### 4.2 Experiment Metadata
+### Transaction Data
 
-**Table: `experiment_metadata`**
+The OTA transaction dataset should contain fields such as:
 
-| Field                       | Description                    |
-| --------------------------- | ------------------------------ |
-| `experiment_id`             | Unique experiment identifier   |
-| `experiment_name`           | Experiment name                |
-| `experiment_arm`            | Control or Treatment           |
-| `campaign_id`               | Associated campaign identifier |
-| `experiment_start_datetime` | Experiment start               |
-| `experiment_end_datetime`   | Experiment end                 |
-| `traffic_split`             | Target allocation              |
-| `split_method`              | Cookie-based or search-based   |
+| Field              | Description                                    |
+| ------------------ | ---------------------------------------------- |
+| `transaction_id`   | Unique booking identifier                      |
+| `experiment_id`    | Experiment identifier                          |
+| `variant`          | Experiment variant                             |
+| `click_id`         | Campaign click associated with the transaction |
+| `transaction_date` | Transaction timestamp/date                     |
+| `booking_value`    | Value of the booking                           |
+| `cancelled`        | Cancellation indicator                         |
 
-This table defines the experiment configuration and the relationship between campaigns and experiment arms.
+The project assumes that the OTA already has reliable conversion tracking for the `paid_transaction` event.
 
-### 4.3 Google Ads Click Data
-
-**Table: `ad_clicks`**
-
-| Field             | Description                                |
-| ----------------- | ------------------------------------------ |
-| `gclid`           | Google click identifier                    |
-| `campaign_id`     | Google Ads campaign identifier             |
-| `ad_id`           | Advertisement identifier                   |
-| `ad_group_id`     | Ad group identifier                        |
-| `click_timestamp` | Time of click                              |
-| `cost`            | Advertising cost associated with the click |
-
-### 4.4 OTA Event Data
-
-**Table: `ota_events`**
-
-| Field             | Description                      |
-| ----------------- | -------------------------------- |
-| `session_id`      | OTA session identifier           |
-| `gclid`           | Captured Google click identifier |
-| `event_timestamp` | Event timestamp                  |
-| `event_type`      | Type of user event               |
-
-Example event types:
-
-```text
-landing
-search
-hotel_view
-booking_start
-booking_complete
-```
-
-### 4.5 Customer Identity Mapping
-
-**Table: `session_customer_map`**
-
-| Field                | Description                         |
-| -------------------- | ----------------------------------- |
-| `session_id`         | OTA session identifier              |
-| `customer_id`        | First-party customer identifier     |
-| `identity_timestamp` | Time at which identity was resolved |
-
-### 4.6 Booking Data
-
-**Table: `bookings`**
-
-| Field                 | Description                   |
-| --------------------- | ----------------------------- |
-| `booking_id`          | Unique booking identifier     |
-| `customer_id`         | Customer who made the booking |
-| `booking_timestamp`   | Booking timestamp             |
-| `booking_value`       | Booking value                 |
-| `booking_status`      | Booking status                |
-| `cancellation_status` | Cancellation status           |
-
-### 4.7 Analytical Experiment Dataset
-
-The final analytical dataset will have a grain of:
-
-> **One row per eligible user in the experiment population.**
-
-Conceptually:
-
-```text
-experiment_id
-customer_id
-assigned_variant
-assignment_timestamp
-
-first_gclid
-first_session_id
-
-impression_flag
-click_flag
-session_flag
-hotel_view_flag
-booking_start_flag
-booking_complete_flag
-confirmed_booking_flag
-
-booking_value
-cancelled_booking_flag
-ad_cost
-```
-
-Not every field will be populated for every user. Missing values are expected when the measurement chain cannot be completed.
-
-### 4.8 Assignment and Outcome Separation
-
-Assignment information must remain separate from post-assignment outcomes.
-
-**Assignment / pre-treatment**
-
-```text
-experiment_id
-assigned_variant
-assignment_timestamp
-```
-
-**Post-assignment outcomes**
-
-```text
-impression_flag
-click_flag
-session_flag
-hotel_view_flag
-booking_start_flag
-booking_complete_flag
-confirmed_booking_flag
-booking_value
-cancelled_booking_flag
-```
-
-Post-assignment behavior should not be used to redefine the experiment population or assignment.
-
-### 4.9 Identifier Relationships
-
-The expected relationship is:
-
-```text
-experiment_metadata
-        │
-        │ campaign_id
-        ↓
-    ad_clicks
-        │
-        │ gclid
-        ↓
-    ota_events
-        │
-        │ session_id
-        ↓
-session_customer_map
-        │
-        │ customer_id
-        ↓
-    bookings
-```
-
-These relationships are not one-to-one.
-
-For example:
-
-* One customer may generate multiple clicks.
-* One customer may generate multiple sessions.
-* One session may contain multiple events.
-* One customer may make multiple bookings.
-* Some clicks may not map to an OTA session.
-* Some sessions may not map to a customer.
-* Some customers may not make a booking.
-
-### 4.10 Linkage Quality
-
-The analysis will measure how much of the experiment population can be connected through the measurement chain.
-
-Key metrics include:
-
-```text
-Click Linkage Rate
-= clicks with valid OTA linkage / total clicks
-
-Customer Linkage Rate
-= sessions linked to customer / measurable sessions
-
-Booking Linkage Rate
-= bookings linked to experiment population / relevant bookings
-```
-
-These are measurement-coverage metrics, not campaign performance metrics.
-
-### 4.11 Analytical Principle
-
-The analytical dataset needs to preserve three separate layers:
-
-1. Experimental assignment
-2. Advertising exposure and interaction
-3. Downstream customer and booking outcomes
-
-This allows the same dataset to support the primary ITT analysis and the diagnostic analysis of the measurement funnel.
+The transaction data is used to validate conversion events and support booking-value and cancellation analysis.
 
 ---
 
-## 5. Experiment Validity & Measurement Risks
+## 13. Experiment Validation
 
-A 50/50 split alone does not make the experiment valid. Assignment, exposure, tracking, and outcome measurement all need to be checked.
+Before comparing performance, the experiment data should be validated to confirm that the intended experiment was actually delivered.
 
-### 5.1 Randomization Balance
+### 13.1 Variant Assignment
 
-Control and Treatment should be comparable on relevant pre-treatment characteristics.
+Confirm that campaign records can be clearly identified as:
 
-Potential checks:
+* Control
+* Treatment
 
-* Device type
-* Geography
-* New vs returning customer
-* Historical engagement
-* Pre-experiment activity
-* Other available pre-treatment variables
+No records should have an unknown or conflicting variant.
 
-These checks are used to identify unexpected differences between groups before treatment exposure.
+### 13.2 Traffic Allocation
 
-### 5.2 Sample Ratio Mismatch
+Compare the observed number of clicks between Control and Treatment.
 
-Observed assignment should be compared with the intended 50/50 allocation.
+The purpose is not to require a perfectly equal split, but to identify major delivery imbalances that could affect interpretation.
 
-A meaningful deviation may indicate issues with experiment configuration, eligibility, traffic allocation, or data collection.
+### 13.3 Experiment Timing
 
-The analysis should distinguish between:
+Confirm that campaign activity falls within the predefined:
 
-* Intended assignment ratio
-* Observed assignment ratio
-* Observed advertising exposure ratio
+* 28-day experiment period
+* 7-day post-experiment observation period
 
-These do not necessarily match.
+### 13.4 Conversion Tracking
 
-### 5.3 Exposure and Assignment
+Confirm that paid transactions are associated with the correct experiment and variant.
 
-Assignment does not guarantee that a user receives an impression.
+Check for:
 
-A user may:
+* Missing experiment IDs
+* Missing variant assignments
+* Duplicate transaction IDs
+* Invalid transaction records
+* Transactions occurring outside the 7-day conversion window
 
-```text
-Be assigned
-    ↓
-Receive no impression
-    ↓
-Or receive an impression but not click
-    ↓
-Or click but not reach the OTA
-    ↓
-Or reach the OTA without a measurable session
-```
+### 13.5 Campaign Setting Consistency
 
-The primary analysis will retain users based on assignment. Exposure and delivery will be analyzed separately.
+Where data is available, verify that the Control and Treatment variants maintained the intended common settings.
 
-### 5.4 Contamination
-
-Contamination occurs when a user assigned to one condition is exposed to the other.
-
-The risk depends partly on the experiment split method. For example, search-based splitting can allow the same user to encounter different versions across searches.
-
-Where the data allows it, cross-variant exposure will be measured rather than assumed to be zero.
-
-### 5.5 Tracking Gaps
-
-The measurement chain can break at several points.
-
-Example:
-
-```text
-Google Ads Click
-       ↓
-   GCLID missing
-       ↓
-No reliable OTA linkage
-```
-
-Or:
-
-```text
-OTA Session
-       ↓
-Customer identity unresolved
-       ↓
-Cannot confidently connect to booking
-```
-
-The size of these gaps and their potential effect on downstream analysis should be documented.
-
-### 5.6 Multiple Sessions and Bookings
-
-A customer may interact with the OTA multiple times and make multiple bookings.
-
-The analysis therefore needs explicit rules for:
-
-* Selecting the relevant experimental exposure
-* Connecting sessions to customers
-* Counting users in the primary metric
-* Handling multiple bookings
-* Calculating booking value
-
-For the primary conversion metric, a user is considered converted if they have at least one qualifying confirmed booking within the defined outcome window.
-
-### 5.7 Delayed Conversions
-
-A user may be exposed during the experiment but book later.
-
-The experiment therefore needs a predefined outcome window and enough time after the experiment to observe eligible conversions.
-
-Bookings outside the defined window will not automatically be counted as experiment outcomes.
-
-### 5.8 Cancellation and Booking Quality
-
-A completed booking is not necessarily an economically realized booking.
-
-Some bookings may later be cancelled. The primary metric will use the predefined confirmed-booking definition, while cancellation and booking value will be evaluated separately.
-
-### 5.9 Campaign Configuration Changes
-
-Changes during the experiment can affect interpretation.
-
-Relevant changes include:
-
-* Budget
-* Bidding strategy
-* Targeting
-* Geographic coverage
-* Offer
-* Landing experience
-* Campaign structure
-* Experiment allocation
-
-Material changes should be recorded during the experiment period.
-
-### 5.10 Measurement Population vs Full Experiment Population
-
-There are two populations to keep separate.
-
-**Full experiment population**
-
-```text
-All eligible users assigned to Control or Treatment
-```
-
-**Linked measurement population**
-
-```text
-Users for whom advertising activity can be connected
-to first-party sessions, customers, or bookings
-```
-
-The primary ITT analysis should preserve the full experiment population where assignment is observable.
-
-Linkage restrictions should be analyzed separately rather than silently redefining the experiment population.
+Any material deviation should be documented before interpreting the results.
 
 ---
 
-## 6. Key Design Decisions
+## 14. Statistical Analysis
 
-The main decisions from Day 1 are:
+The primary analysis compares the click-to-paid-transaction conversion rate between Control and Treatment.
 
-| Decision             | Definition                               |
-| -------------------- | ---------------------------------------- |
-| Experimental unit    | Eligible user                            |
-| Variants             | Existing message vs new message          |
-| Target allocation    | 50/50                                    |
-| Primary framework    | Intention-to-Treat (ITT)                 |
-| Primary metric       | Confirmed booking conversion rate        |
-| Secondary metrics    | Funnel, CAC, ROAS, booking value         |
-| Guardrails           | Cancellation and booking quality         |
-| Assignment basis     | Experimental assignment                  |
-| Attribution basis    | Separate from experiment assignment      |
-| Click linkage        | GCLID where available                    |
-| Analytical grain     | One row per eligible user                |
-| Measurement approach | Event-level data linked across systems   |
-| Missing linkage      | Quantified rather than silently excluded |
+For each variant:
 
-The experiment is designed to answer a causal campaign question while keeping the measurement limitations visible. The synthetic data will therefore be built from event-level records rather than a precomputed A/B summary table.
+`Conversion Rate = Converting Clicks / Eligible Clicks`
+
+The analysis should report:
+
+* Control conversion rate
+* Treatment conversion rate
+* Absolute difference
+* Relative lift
+* Confidence interval
+* Statistical significance
+
+The primary statistical test should be an appropriate test for comparing two independent conversion proportions.
+
+The analysis should treat each eligible click as one binary observation rather than treating every transaction as an independent observation.
+
+### Absolute Difference
+
+`Treatment Conversion Rate - Control Conversion Rate`
+
+This shows the percentage-point change between the two variants.
+
+### Relative Lift
+
+`(Treatment Conversion Rate - Control Conversion Rate) / Control Conversion Rate`
+
+This expresses the difference relative to the Control baseline.
+
+Statistical significance should be interpreted together with effect size and confidence intervals rather than used as the sole basis for a business decision.
+
+---
+
+## 15. Business Interpretation
+
+The experiment should distinguish between:
+
+1. **Conversion performance**
+2. **Campaign efficiency**
+3. **Traffic volume**
+4. **Transaction value**
+5. **Transaction quality**
+
+For example, a higher Treatment conversion rate does not automatically mean the Treatment generated more total bookings if restricting inventory substantially reduces campaign traffic.
+
+Similarly, a higher transaction count does not necessarily indicate better business performance if the campaign produces materially higher costs or cancellation rates.
+
+The final interpretation should therefore consider the primary metric together with secondary metrics and the cancellation-rate guardrail.
+
+---
+
+## 16. Key Design Decisions
+
+### Why 7 Days?
+
+A 7-day conversion window provides a relatively short and predefined period for attributing a paid transaction to a campaign click.
+
+A longer window could capture more delayed bookings but also increases the opportunity for later marketing interactions or other factors to influence the eventual booking.
+
+The 7-day window therefore keeps the experiment focused on relatively direct campaign response.
+
+### Why 28 Days?
+
+A 28-day experiment provides four weeks of campaign exposure, allowing the test to capture variation across multiple weeks rather than relying on a short observation period.
+
+The duration is long enough to generate meaningful campaign traffic while keeping the project focused and manageable.
+
+### Why Use Clicks as the Primary Unit?
+
+The business question concerns campaign effectiveness after users interact with the paid campaign.
+
+Using the click as the primary unit allows each observation to have a clearly defined binary outcome: whether that click generated a paid transaction within 7 days.
+
+### Why Not Use Paid Transactions as the Primary Unit?
+
+A single click can generate multiple transactions.
+
+Treating every transaction as an independent observation could therefore give disproportionate weight to clicks that generate multiple bookings.
+
+Transactions remain useful as a secondary efficiency metric, but the primary statistical comparison is based on converting clicks.
+
+### Why Keep Cancellation Rate as a Guardrail?
+
+A campaign could generate more recorded transactions while also generating more cancellations.
+
+Including cancellation rate helps distinguish additional transaction volume from potentially lower-quality transaction outcomes.
+
+---
+
+## 17. Experiment Principle
+
+The experiment is designed around one core principle:
+
+> **Change the hotel inventory strategy while keeping other campaign conditions as consistent as practical, then measure whether the change produces a meaningful difference in paid booking conversion.**
+
+The primary question is not simply which campaign generates more transactions.
+
+It is whether the **inventory selection strategy** changes the probability that an eligible campaign click results in a paid hotel transaction within the predefined 7-day conversion window.
