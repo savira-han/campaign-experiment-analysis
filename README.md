@@ -130,6 +130,6 @@ campaign-experiment-analysis/
 
 ## 07 - Project Status
 
-The experiment design, synthetic data generation, data preparation, and experiment validation are complete.
+The experiment design, synthetic data generation, data preparation, validation, statistical analysis, and business impact analysis are complete.
 
-Statistical analysis and business impact analysis will be added after the validated experiment dataset is finalized.
+The final insights, campaign recommendation, and portfolio presentation will be added during the final packaging stage.
