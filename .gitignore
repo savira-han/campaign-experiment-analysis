@@ -13,6 +13,7 @@ env/
 # DuckDB
 *.duckdb
 *.duckdb.wal
+analytics.duckdb
 
 # macOS
 .DS_Store

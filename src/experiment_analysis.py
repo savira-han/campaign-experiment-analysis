@@ -23,7 +23,7 @@ ORDER BY variant
 result = con.execute(query).fetchdf()
 
 
-# Split the two experiment groups so the calculations below are easier to read
+# Split the two experiment groups
 control = result[result["variant"] == "Control"].iloc[0]
 treatment = result[result["variant"] == "Treatment"].iloc[0]
 
@@ -44,23 +44,18 @@ relative_lift = absolute_difference / control_rate
 
 
 print("=== PRIMARY METRIC ===")
+print(f"Control conversion rate: {control_rate:.4%}")
+print(f"Treatment conversion rate: {treatment_rate:.4%}")
 print(
-    f"Control conversion rate: {control_rate:.4%}"
+    f"Absolute difference: "
+    f"{absolute_difference * 100:.4f} percentage points"
 )
-print(
-    f"Treatment conversion rate: {treatment_rate:.4%}"
-)
-print(
-    f"Absolute difference: {absolute_difference * 100:.4f} percentage points"
-)
-print(
-    f"Relative lift: {relative_lift:.2%}"
-)
+print(f"Relative lift: {relative_lift:.2%}")
 
 
 # Two-proportion z-test
-# The pooled rate is used for the hypothesis test because the null
-# hypothesis assumes that the two conversion rates are equal.
+# The pooled rate is used because the null hypothesis assumes
+# that the two conversion rates are equal.
 pooled_rate = (
     control_conversions + treatment_conversions
 ) / (
@@ -68,7 +63,8 @@ pooled_rate = (
 )
 
 standard_error_test = (
-    pooled_rate * (1 - pooled_rate)
+    pooled_rate
+    * (1 - pooled_rate)
     * (
         1 / control_clicks
         + 1 / treatment_clicks
@@ -86,8 +82,6 @@ print(f"P-value: {p_value:.6f}")
 
 
 # 95% confidence interval for the difference in conversion rates
-# Unlike the hypothesis test, the CI uses the individual group rates
-# to estimate the uncertainty around the observed difference.
 standard_error_ci = (
     (
         control_rate * (1 - control_rate)
@@ -108,21 +102,16 @@ ci_upper = absolute_difference + z_critical * standard_error_ci
 
 print()
 print("=== 95% CONFIDENCE INTERVAL ===")
-print(
-    f"Lower bound: {ci_lower * 100:.4f} percentage points"
-)
-print(
-    f"Upper bound: {ci_upper * 100:.4f} percentage points"
-)
+print(f"Lower bound: {ci_lower * 100:.4f} percentage points")
+print(f"Upper bound: {ci_upper * 100:.4f} percentage points")
 
 
 # Secondary business metrics
-# These metrics help explain whether the conversion result also
-# translates into better campaign economics.
 business_query = """
 SELECT
     variant,
     eligible_clicks,
+    converting_clicks,
     paid_transactions,
     cost,
     booking_value,
@@ -152,14 +141,12 @@ business_metrics = con.execute(business_query).fetchdf()
 
 print()
 print("=== SECONDARY BUSINESS METRICS ===")
-print(
-    business_metrics.to_string(index=False)
-)
+print(business_metrics.to_string(index=False))
 
 
-# Estimate the Treatment impact using the same click volume as Control.
+# Estimate Treatment impact using the same click volume as Control.
 # This avoids attributing the difference in raw totals to performance
-# when the two variants received slightly different amounts of traffic.
+# when the two variants received slightly different traffic volumes.
 control_booking_value_per_click = business_metrics.loc[
     business_metrics["variant"] == "Control",
     "booking_value_per_click"
@@ -178,7 +165,6 @@ incremental_booking_value = (
     treatment_booking_value_per_click
     - control_booking_value_per_click
 ) * control_clicks
-
 
 control_cost_per_transaction = business_metrics.loc[
     business_metrics["variant"] == "Control",
@@ -212,18 +198,26 @@ print(
 )
 
 
-# Save the main analysis output for use in the final case study
+# Save the main analysis output for the final case study
 experiment_results = business_metrics.copy()
 
 experiment_results["absolute_difference_pp"] = (
     absolute_difference * 100
 )
+
 experiment_results["relative_lift_pct"] = (
     relative_lift * 100
 )
+
 experiment_results["p_value"] = p_value
-experiment_results["ci_lower_pp"] = ci_lower * 100
-experiment_results["ci_upper_pp"] = ci_upper * 100
+
+experiment_results["ci_lower_pp"] = (
+    ci_lower * 100
+)
+
+experiment_results["ci_upper_pp"] = (
+    ci_upper * 100
+)
 
 experiment_results[
     "incremental_converting_clicks_at_control_traffic"
@@ -234,7 +228,7 @@ experiment_results[
 ] = incremental_booking_value
 
 
-# Round the output so the CSV is easier to inspect and use in the portfolio
+# Round the output so the CSV is easier to inspect
 experiment_results = experiment_results.round({
     "cost": 2,
     "booking_value": 2,
@@ -251,6 +245,7 @@ experiment_results = experiment_results.round({
     "incremental_converting_clicks_at_control_traffic": 0,
     "incremental_booking_value_at_control_traffic": 2
 })
+
 
 experiment_results.to_csv(
     "outputs/experiment_results.csv",
